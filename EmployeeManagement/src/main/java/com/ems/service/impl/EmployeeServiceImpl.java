@@ -59,4 +59,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employeeRepository.findByEmpSalBetween(initialSal, finalSal);
 	}
 
+	@Override
+	public List<Employee> getEmployeesBasedOnDesg(String empDesg) {
+		return employeeRepository.findByEmpDesg(empDesg);
+	}
+
 }

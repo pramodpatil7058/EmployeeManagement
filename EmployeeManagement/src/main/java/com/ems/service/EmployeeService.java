@@ -20,4 +20,6 @@ public interface EmployeeService {
 	public String deleteEmployee(int empId);
 	
 	public List<Employee> getAllEmployeesBetweenSalaries(int initialSal, int finalSal);
+	
+	public List<Employee> getEmployeesBasedOnDesg(String empDesg);
 }

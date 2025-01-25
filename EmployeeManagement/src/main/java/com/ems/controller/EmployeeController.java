@@ -3,7 +3,11 @@ package com.ems.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +21,8 @@ import com.ems.entity.Employee;
 import com.ems.exception.ResourceNotFoundException;
 import com.ems.service.EmployeeService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -25,7 +31,7 @@ public class EmployeeController {
 	private EmployeeService empService;
 
 	@PostMapping("/saveEmployee")
-	public Employee saveEmployee(@RequestBody Employee employee) {
+	public Employee saveEmployee(@Valid @RequestBody Employee employee) {
 		return empService.addEmployee(employee);
 	}
 
@@ -63,4 +69,15 @@ public class EmployeeController {
 		return empService.getAllEmployeesBetweenSalaries(initialSal, finalSal);
 	}
 
+	@GetMapping("/getEmployeesBasedOnDesg/{empDesg}")
+	public List<Employee> getEmployeesBasedOnDesg(@PathVariable String empDesg){
+		return empService.getEmployeesBasedOnDesg(empDesg);
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<String> validityExceptionHandler(MethodArgumentNotValidException ex) {
+		StringBuilder messages = new StringBuilder();
+        ex.getBindingResult().getAllErrors().forEach(error -> messages.append(error.getDefaultMessage()).append(" "));
+        return new ResponseEntity<String>(messages.toString(), HttpStatus.BAD_REQUEST);
+	}
 }

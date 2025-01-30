@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ems.entity.Department;
 import com.ems.entity.Employee;
 import com.ems.exception.ResourceNotFoundException;
+import com.ems.repository.DepartmentRepository;
 import com.ems.repository.EmployeeRepository;
 import com.ems.service.EmployeeService;
 
@@ -16,8 +18,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	@Autowired
+	private DepartmentRepository departmentRepository;
+	
 	@Override
 	public Employee addEmployee(Employee employee) {
+		Department dept = departmentRepository.findById(employee.getDepartment().getDeptId()).orElse(null);
+		employee.setDepartment(dept);
 		return employeeRepository.save(employee);
 	}
 
